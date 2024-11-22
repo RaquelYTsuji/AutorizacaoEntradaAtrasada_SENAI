@@ -1,12 +1,17 @@
 package Cadastro;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Menu_Simples {
+    private static String[][] alunos = new String[][]{{"Nome do Aluno: ", "Matrícula do Aluno: ", "AQV: ", "Coordenador: ", "Matrícula do Funcionário: ", "Código do Usuário: "}};
+    private static String caminhoArquivo = "src\\Cadastro\\arquivo.txt";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
-        String[][] alunos = new String[][]{{"Nome do Aluno", "Matrícula do Aluno", "AQV", "Coordenador", "Matrícula do Funcionário", "Código do Usuário"}};
 
         int opcao;
         String nomeAluno;
@@ -14,6 +19,13 @@ public class Menu_Simples {
         String aqv;
         String coordenador;
         String matriculaFuncionario;
+
+        File arquivo = new File(caminhoArquivo); //arquivo de salvamento de dados
+        try {
+            boolean newFile = arquivo.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         do {
             System.out.println("Escolha uma opção: ");
@@ -38,15 +50,7 @@ public class Menu_Simples {
                     System.out.println("Digite o número da matrícula do funcionário: ");
                     matriculaFuncionario = scanner.nextLine();
 
-                    String[][] cadastro = adicionarCadastro(alunos, nomeAluno, matriculaAluno, aqv, coordenador, matriculaFuncionario);
-
-                    alunos = new String[cadastro.length][cadastro[0].length];
-
-                    for (int i = 0; i < cadastro.length; i++) {
-                        for (int j = 0; j < cadastro[0].length; j++) {
-                            alunos[i][j] = cadastro[i][j];
-                        }
-                    }
+                    adicionarCadastro(nomeAluno, matriculaAluno, aqv, coordenador, matriculaFuncionario);
 
                     System.out.println("Cadastro realizado com sucesso!");
                     System.out.println("Nome do Aluno: " + nomeAluno + ", Matrícula: " + matriculaAluno +
@@ -58,8 +62,8 @@ public class Menu_Simples {
                     for (int i = 0; i < alunos.length; i++) {
                         for (int j = 0; j < alunos[0].length; j++) {
                             System.out.print(alunos[i][j] + "\t");
+
                         }
-                        System.out.println();
                     }
                     break;
 
@@ -83,7 +87,7 @@ public class Menu_Simples {
         scanner.close();
     }
 
-    static String[][] adicionarCadastro(String[][] alunos, String nomeAluno, String matriculaALuno, String avq,
+    static void adicionarCadastro(String nomeAluno, String matriculaALuno, String avq,
                                         String coordenador, String matriculaFuncionario){
         String[][] cadastro = new String[alunos.length+1][alunos[0].length];
 
@@ -99,7 +103,19 @@ public class Menu_Simples {
         cadastro[cadastro.length-1][3] = coordenador;
         cadastro[cadastro.length-1][4] = matriculaFuncionario;
 
-        return cadastro;
+        alunos = new String[cadastro.length][cadastro[0].length];
+
+        for (int i = 0; i < cadastro.length; i++) {
+            for (int j = 0; j < cadastro[0].length; j++) {
+                alunos[i][j] = cadastro[i][j];
+            }
+        }
+
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(caminhoArquivo));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
