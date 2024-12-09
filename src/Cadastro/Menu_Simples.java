@@ -3,12 +3,15 @@ package Cadastro;
 import java.io.*;
 import java.util.Scanner;
 
+import static Cadastro.Entrada_Atrasada.*;
+
 public class Menu_Simples {
+    static Scanner scanner = new Scanner(System.in);
     static String[][] alunos = new String[0][6];
-    static String caminhoArquivo = "src\\Cadastro\\arquivo.txt";
+    static String caminhoArquivoCadastros = "src\\Cadastro\\cadastros.txt";
+
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
         int opcao;
         String nomeAluno;
@@ -17,14 +20,18 @@ public class Menu_Simples {
         String coordenador;
         int matriculaFuncionario;
 
-        arquivo();
+        arquivoCadastros();
+        arquivoAtrasados();
 
         do {
             System.out.println("\nEscolha uma opção:");
             System.out.println("\t 1- Criar Cadastro");
             System.out.println("\t 2- Lista de todos os alunos cadastrados");
             System.out.println("\t 3- Buscar aluno cadastrado");
-            System.out.println("\t 4- Sair");
+            System.out.println("\t 4- Adicionar entrada atrasada");
+            System.out.println("\t 5- Lista de todos os alunos atrasados");
+            System.out.println("\t 6- Permitir entrada atrasada");
+            System.out.println("\t 7- Sair");
             System.out.print("Opção escolhida: ");
 
             opcao = scanner.nextInt();
@@ -32,16 +39,16 @@ public class Menu_Simples {
 
             switch (opcao) {
                 case 1:
-                    System.out.println("\nDigite o nome do aluno: ");
+                    System.out.print("\nDigite o nome do aluno: ");
                     nomeAluno = scanner.nextLine();
-                    System.out.println("Digite o número da matrícula: ");
+                    System.out.print("Digite o número da matrícula: ");
                     matriculaAluno = scanner.nextInt();
                     scanner.nextLine();
-                    System.out.println("Digite o nome da AQV: ");
+                    System.out.print("Digite o nome da AQV: ");
                     aqv = scanner.nextLine();
-                    System.out.println("Digite o nome do coordenador: ");
+                    System.out.print("Digite o nome do coordenador: ");
                     coordenador = scanner.nextLine();
-                    System.out.println("Digite o número da matrícula do funcionário: ");
+                    System.out.print("Digite o número da matrícula do funcionário: ");
                     matriculaFuncionario = scanner.nextInt();
                     scanner.nextLine();
 
@@ -62,20 +69,42 @@ public class Menu_Simples {
                     break;
 
                 case 4:
+                    System.out.print("\nDigite o nome do aluno: ");
+                    nomeAluno = scanner.nextLine();
+                    System.out.print("Digite o número da matrícula: ");
+                    matriculaAluno = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Digite o motivo do atraso: ");
+                    String motivoAtraso = scanner.nextLine();
+
+                    adicionarAtrasado(alunos, nomeAluno, matriculaAluno, motivoAtraso);
+                    break;
+
+                case 5:
+                    System.out.println("\nLista de alunos atrasados: ");
+                    exibirListaAtrasados();
+                    break;
+
+                case 6:
+                    System.out.print("Digite o número da matrícula do aluno que deseja permitir: ");
+                    int alunoBusca = scanner.nextInt();
+                    permitirAtrasados(alunoBusca);
+                    break;
+
+                case 7:
                     System.out.println("Saindo...");
+                    scanner.close();
                     break;
 
                 default:
                     System.out.println("Opção inválida! Tente novamente.");
                     break;
             }
-        } while (opcao != 4);
-
-        scanner.close();
+        } while (opcao != 7);
     }
 
-    static void arquivo() {
-        File arquivo = new File(caminhoArquivo);
+    static void arquivoCadastros() {
+        File arquivo = new File(caminhoArquivoCadastros);
         try {
             if (!arquivo.exists()) {
                 arquivo.createNewFile();
@@ -128,7 +157,7 @@ public class Menu_Simples {
 
         alunos = novoCadastro;
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoCadastros, true))) {
             writer.write("Nome do Aluno: " + alunos[alunos.length - 1][0] + ", ");
             writer.write("Matrícula: " + alunos[alunos.length - 1][1] + ", ");
             writer.write("AQV: " + alunos[alunos.length - 1][2] + ", ");
@@ -153,7 +182,6 @@ public class Menu_Simples {
                 System.out.println("Coordenador: " + alunos[i][3]);
                 System.out.println("Matrícula do Funcionário: " + alunos[i][4]);
                 System.out.println("Código do Usuário: " + alunos[i][5]);
-                System.out.println("-----------------------------");
             }
         }
     }
@@ -170,7 +198,6 @@ public class Menu_Simples {
                 System.out.println("Matrícula do Funcionário: " + alunos[i][4]);
                 System.out.println("Código do Usuário: " + alunos[i][5]);
                 encontrado = true;
-                break;
             }
         }
         if (!encontrado) {

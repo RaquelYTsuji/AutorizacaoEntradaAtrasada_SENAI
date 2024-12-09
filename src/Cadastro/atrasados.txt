@@ -1,0 +1,2 @@
+Nome do Aluno: Nome, Matrícula: 13, Motivo do Atraso: Transporte publico, Entrada Permitida: false, Horário: 2024-12-08T12:25:05.278121300
+Nome do Aluno: Nome, Matrícula: 13, Motivo do Atraso: Transporte publico, Entrada Permitida: true, Horário: 2024-12-07T22:25:05.278121300
